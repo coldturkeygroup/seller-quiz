@@ -372,10 +372,10 @@ if ( $hover_setting && strlen( $hover_setting ) > 0 && $hover_setting != '' ) {
 			</div>
 
 			<div class="quiz-progress">
-				<span class="progress-percent">6</span>% complete
+				<span class="progress-percent">8</span>% complete
 				<div class="progress">
-					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100" style="width: 6%;">
-						<span class="sr-only"><span class="progress-percent">6</span>% Complete</span>
+					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100" style="width: 8%;">
+						<span class="sr-only"><span class="progress-percent">8</span>% Complete</span>
 					</div>
 				</div>
 			</div>

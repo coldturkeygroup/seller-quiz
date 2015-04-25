@@ -199,14 +199,14 @@ jQuery(function ($) {
     }
 
     if ($step == '') {
-      $step = '17.';
+      $step = '12.';
     }
 
     updateProgressBar(parseInt($step.replace('.', ''), 10) - 1);
   }
 
   function updateProgressBar(step) {
-    var progress = Math.ceil((step / 17) * 100);
+    var progress = Math.ceil((step / 12) * 100);
 
     $('.progress-percent').text(progress);
     $('.progress-bar').attr('aria-valuenow', progress).css('width', progress + '%');
