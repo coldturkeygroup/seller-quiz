@@ -273,11 +273,12 @@ class SellerQuiz {
 			foreach ( $field_data as $k => $v ) {
 				$data        = $v['default'];
 				$placeholder = $v['placeholder'];
+				$type        = $v['type'];
 				if ( isset( $fields[ $k ] ) && isset( $fields[ $k ][0] ) ) {
 					$data = $fields[ $k ][0];
 				}
 
-				if ( $k == 'legal_broker' || $k == 'show_offer' || $k == 'offer' || $k == 'call_to_action' || $k == 'retargeting' || $k == 'conversion' ) {
+				if ( $type == 'text' ) {
 					$html .= '<tr valign="top"><th scope="row"><label for="' . esc_attr( $k ) . '">' . $v['name'] . '</label></th><td>';
 					$html .= '<input style="width:100%" name="' . esc_attr( $k ) . '" id="' . esc_attr( $k ) . '" placeholder="' . esc_attr( $placeholder ) . '" type="text" value="' . esc_attr( $data ) . '" />';
 					$html .= '<p class="description">' . $v['description'] . '</p>' . "\n";
@@ -307,7 +308,7 @@ class SellerQuiz {
 
 					$html .= '</select><p class="description">' . $v['description'] . '</p>' . "\n";
 					$html .= '</td><tr/>' . "\n";
-				} elseif ( $k == 'media_file' ) {
+				} elseif ( $type == 'upload' ) {
 					$html .= '<tr valign="top"><th scope="row"><label for="' . esc_attr( $k ) . '">' . $v['name'] . '</label></th><td><input type="button" class="button" id="upload_media_file_button" value="' . __( 'Upload Image', $this->token ) . '" data-uploader_title="Choose an image" data-uploader_button_text="Insert image file" /><input name="' . esc_attr( $k ) . '" type="text" id="upload_media_file" class="regular-text" value="' . esc_attr( $data ) . '" />' . "\n";
 					$html .= '<p class="description">' . $v['description'] . '</p>' . "\n";
 					$html .= '</td><tr/>' . "\n";
@@ -581,16 +582,20 @@ class SellerQuiz {
 		$response  = '';
 		$feedback  = [
 			[
-				'Since you scored over 50 out of a possible 88, you should be able to sell your house quickly and for top dollar. For the best results, talk to a licensed real estate agent who can give you advice on how to get top dollar for your home.',
+				'<em>Since you scored over 50 out of a possible 88</em>, you should be able to sell your house quickly and for top dollar. For the best results, talk to a licensed real estate agent who can give you advice on how to get top dollar for your home.',
 				0,
 				64
 			],
 			[
-				'Congrats! Since you scored over 65 out of a possible 88, you should be able to sell your house quickly and for top dollar.',
+				'<em>Congrats! Since you scored over 65 out of a possible 88</em>, you should be able to sell your house quickly and for top dollar.',
 				65,
 				74
 			],
-			[ 'Congrats! Since you scored over 75 out of a possible 88, you will be able to sell your house quickly and for top dollar.', 75, 88 ]
+			[
+				'<em>Congrats! Since you scored over 75 out of a possible 88</em>, you will be able to sell your house quickly and for top dollar.',
+				75,
+				88
+			]
 		];
 
 		foreach ( $input as $key => $value ) {
