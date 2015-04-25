@@ -170,7 +170,7 @@ if ( $hover_setting && strlen( $hover_setting ) > 0 && $hover_setting != '' ) {
 			<div class="row page" style="display:none;">
 				<div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="question-4" data-model="questionFour">
 					<p class="question-number">4.</p>
-					<h4 class="question-title">Here in <?= of_get_option('platform_user_county', 'Kandiyohi') ?> County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?</h4>
+					<h4 class="question-title">Here in <?= get_option('platform_user_county', 'Kandiyohi') ?> County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?</h4>
 
 					<div class="row">
 						<div class="col-xs-12">

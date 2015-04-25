@@ -631,7 +631,7 @@ class SellerQuiz {
 			'How long have you owned your home?',
 			'Do you need your home to sell in less than 90 days, or are you willing to wait for a potential buyer that might be willing to pay more money?',
 			'Is your home newly renovated/updated, or does it currently need minor upgrades?',
-			'Here in ' . of_get_option( 'platform_user_county', 'Kandiyohi' ) . ' County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?',
+			'Here in ' . get_option( 'platform_user_county', 'Kandiyohi' ) . ' County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?',
 			'What is the approximate age of your home?',
 			'What is the condition of your roof/shingles?',
 			'Does home equity play a major role in your retirement savings/strategy?',
