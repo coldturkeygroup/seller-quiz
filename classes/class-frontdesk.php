@@ -50,6 +50,7 @@ class FrontDesk {
 						'key'         => $this->api_key,
 						'title'       => $title,
 						'description' => 'Campaign for Platform Seller Quiz',
+						'type'        => 'Platform',
 						'total_cost'  => '10000',
 						'source'      => $permalink
 					]
