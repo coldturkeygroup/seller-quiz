@@ -22,10 +22,12 @@ $token = 'pf_seller_quiz';
 $media = '<img src="' . get_post_meta($id, 'media_file', true) . '" class="img-responsive" style="margin-top:10px">';
 
 // Define our area
-if (get_post_meta($id, 'area', true) == 'county') {
-    $area = get_option('platform_user_county', 'Kandiyohi') . ' County';
+if (get_post_meta($id, 'area', true) == 'state') {
+    $area = get_option('platform_user_state', 'our state');
+} elseif (get_post_meta($id, 'area', true) == 'city') {
+    $area = get_option('platform_user_city', 'our city');
 } else {
-    $area = get_option('platform_user_city', 'Willmar');
+    $area = get_option('platform_user_county', 'Our') . ' County';
 }
 
 // Get the page colors

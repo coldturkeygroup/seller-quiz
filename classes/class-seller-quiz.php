@@ -472,7 +472,7 @@ class SellerQuiz
             'placeholder' => '',
             'type' => 'select',
             'default' => '',
-            'options' => ['county', 'city'],
+            'options' => ['county', 'city', 'state'],
             'section' => 'info'
         ];
 
