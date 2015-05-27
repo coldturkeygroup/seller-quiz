@@ -731,8 +731,9 @@ class SellerQuiz
      * Email the quiz results to the website admin
      *
      * @param $user_id
+     * @param $score
      */
-    protected function emailResultsToAdmin($user_id)
+    protected function emailResultsToAdmin($user_id, $score)
     {
         // Get the prospect data saved previously
         global $wpdb;
@@ -807,7 +808,7 @@ class SellerQuiz
             // TODO: Create a note on Frontdesk with the prospect's responses
 
             // Email the blog owner the details for the new prospect
-            $this->emailResultsToAdmin($user_id);
+            $this->emailResultsToAdmin($user_id, $score['score']);
 
             echo json_encode(['user_id' => $user_id, 'score' => $score['score'], 'feedback' => $score['feedback']]);
             die();
