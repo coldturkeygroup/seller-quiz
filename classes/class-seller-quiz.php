@@ -806,12 +806,14 @@ class SellerQuiz
             }
 
             // Create a note for the FrontDesk prospect
-            $responses = $this->formatResponsesForEmail($score['responses']);
-            $content = '<p><strong>Quiz Score:</strong> ' . $score['score'] . '/88</p>';
-            foreach ($responses as $response) {
-                $content .= '<p><strong>' . $response['question'] . '</strong><br> ' . $response['answer'] . '</p>';
+            if ($frontdesk_id != null) {
+                $responses = $this->formatResponsesForEmail($score['responses']);
+                $content = '<p><strong>Quiz Score:</strong> ' . $score['score'] . '/88</p>';
+                foreach ($responses as $response) {
+                    $content .= '<p><strong>' . $response['question'] . '</strong><br> ' . $response['answer'] . '</p>';
+                }
+                $this->frontdesk->createNote($frontdesk_id, 'Seller Quiz Responses', $content);
             }
-            $this->frontdesk->createNote($frontdesk_id, 'Seller Quiz Responses', $content);
 
             // Email the blog owner the details for the new prospect
             $this->emailResultsToAdmin($user_id, $score['score']);
