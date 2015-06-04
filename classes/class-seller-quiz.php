@@ -319,12 +319,22 @@ class SellerQuiz
 
                         $html .= '<option value="' . $option . '" ' . $selected . '>' . ucfirst($option) . '</option>';
                     }
-                    $html .= '</select><p class="description">' . $v['description'] . '</p>' . "\n";
+                    $html .= '</select>';
+                    if ($k == 'area') {
+                        $area_custom_val = '';
+                        if(isset($fields['area_custom'])) {
+                            $area_custom_val = 'value="' . esc_attr($fields['area_custom'][0]) . '"';
+                        }
+                        $html .= '<input type="text" name="area_custom" id="area_custom" ' . $area_custom_val . ' placeholder="Your Custom Area" style="width:100%;display:none;">';
+                    }
+                    $html .= '<p class="description">' . $v['description'] . '</p>' . "\n";
                     $html .= '</td><tr/>' . "\n";
                 } elseif ($type == 'upload') {
                     $html .= '<tr valign="top"><th scope="row"><label for="' . esc_attr($k) . '">' . $v['name'] . '</label></th><td><input type="button" class="button" id="upload_media_file_button" value="' . __('Upload Image', $this->token) . '" data-uploader_title="Choose an image" data-uploader_button_text="Insert image file" /><input name="' . esc_attr($k) . '" type="text" id="upload_media_file" class="regular-text" value="' . esc_attr($data) . '" />' . "\n";
                     $html .= '<p class="description">' . $v['description'] . '</p>' . "\n";
                     $html .= '</td><tr/>' . "\n";
+                } elseif ($type == 'hidden') {
+                    $html .= '';
                 } else {
                     $default_color = '';
                     $html .= '<tr valign="top"><th scope="row"><label for="' . esc_attr($k) . '">' . $v['name'] . '</label></th><td>';
@@ -472,7 +482,27 @@ class SellerQuiz
             'placeholder' => '',
             'type' => 'select',
             'default' => '',
-            'options' => ['county', 'city', 'state'],
+            'options' => ['county', 'city', 'state', 'custom'],
+            'section' => 'info'
+        ];
+
+        $fields['area_custom'] = [
+            'name' => __('Custom Quiz Area', $this->token),
+            'description' => __('', $this->token),
+            'placeholder' => '',
+            'type' => 'hidden',
+            'default' => '',
+            'options' => '',
+            'section' => 'info'
+        ];
+
+        $fields['closing'] = [
+            'name' => __('Do You Split Closing Costs?', $this->token),
+            'description' => __('One quiz question assumes that you split closing costs with your buyer. ', $this->token),
+            'placeholder' => '',
+            'type' => 'select',
+            'default' => '',
+            'options' => ['yes', 'no'],
             'section' => 'info'
         ];
 
@@ -644,12 +674,22 @@ class SellerQuiz
      * Format the responses to the quiz to be shown
      * in the email sent to the site admin.
      *
+     * @param $quiz_id
      * @param $responses
      *
      * @return array
      */
-    protected function formatResponsesForEmail($responses)
+    protected function formatResponsesForEmail($quiz_id, $responses)
     {
+        $closing_costs = get_post_meta($quiz_id, 'closing', true);
+        $question_ten = 'Are you willing to share closing costs with the potential buyer?';
+        $answers_ten = ['a' => 'Yes', 'b' => 'No'];
+
+        if ($closing_costs == 'no') {
+            $question_ten = 'Does your home\'s exterior showcase good "curb appeal?"';
+            $answers_ten = ['a' => 'Yes, I take good care of my lawn, landscaping, etc.', 'b' => 'It\'s not bad, but it could use some work.'];
+        }
+
         $question_bank = [
             'How long have you owned your home?',
             'Do you need your home to sell in less than 90 days, or are you willing to wait for a potential buyer that might be willing to pay more money?',
@@ -660,7 +700,7 @@ class SellerQuiz
             'Does home equity play a major role in your retirement savings/strategy?',
             'Sometimes a home sale can affect your tax liability. Have you already spoken with an accountant?',
             'Are you prepared to "stage" your house during the time it is for sale? (Removing personal items like family photos, artwork, and rearranging furniture/layout so potential buyers can visualize it being their home—not yours).',
-            'Are you willing to share closing costs with the potential buyer?',
+            $question_ten,
             'Have you made any significant upgrades or renovations to your home since you purchased it?'
         ];
         $answer_bank = [
@@ -706,7 +746,7 @@ class SellerQuiz
                 'c' => 'No, I believe my home will sell anyways, so I don\'t want to spend too much time on staging.',
                 'd' => 'No, I do not have the time or money to stage my home.'
             ],
-            ['a' => 'Yes', 'b' => 'No'],
+            $answers_ten,
             [
                 'a' => 'Yes, I\'ve renovated/upgraded the bathroom',
                 'b' => 'Yes, I\'ve renovated/upgraded the kitchen',
@@ -732,13 +772,14 @@ class SellerQuiz
      *
      * @param $user_id
      * @param $score
+     * @param $quiz_id
      */
-    protected function emailResultsToAdmin($user_id, $score)
+    protected function emailResultsToAdmin($user_id, $score, $quiz_id)
     {
         // Get the prospect data saved previously
         global $wpdb;
         $subscriber = $wpdb->get_row('SELECT * FROM ' . $this->table_name . ' WHERE id = \'' . $user_id . '\' ORDER BY id DESC LIMIT 0,1');
-        $responses = $this->formatResponsesForEmail(explode(',', $subscriber->responses));
+        $responses = $this->formatResponsesForEmail($quiz_id, explode(',', $subscriber->responses));
 
         // Format the email and send it
         $admin_email = get_bloginfo('admin_email');
@@ -807,7 +848,7 @@ class SellerQuiz
 
             // Create a note for the FrontDesk prospect
             if ($frontdesk_id != null) {
-                $responses = $this->formatResponsesForEmail($score['responses']);
+                $responses = $this->formatResponsesForEmail($_POST['quiz_id'], $score['responses']);
                 $content = '<p><strong>Quiz Score:</strong> ' . $score['score'] . '/88</p>';
                 foreach ($responses as $response) {
                     $content .= '<p><strong>' . $response['question'] . '</strong><br> ' . $response['answer'] . '</p>';
@@ -816,7 +857,7 @@ class SellerQuiz
             }
 
             // Email the blog owner the details for the new prospect
-            $this->emailResultsToAdmin($user_id, $score['score']);
+            $this->emailResultsToAdmin($user_id, $score['score'], $_POST['quiz_id']);
 
             echo json_encode(['user_id' => $user_id, 'score' => $score['score'], 'feedback' => $score['feedback']]);
             die();

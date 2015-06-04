@@ -1,5 +1,18 @@
 jQuery(document).ready(function ($) {
 
+  function toggleHidden() {
+    if($('#area').val() == 'custom') {
+      $('#area_custom').show();
+    } else {
+      $('#area_custom').val('').hide();
+    }
+  }
+
+  toggleHidden();
+  $('#area').change(function () {
+    toggleHidden();
+  });
+
   // Loads the color pickers
   $('.quiz-color').wpColorPicker();
 

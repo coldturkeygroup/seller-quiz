@@ -17,6 +17,7 @@ $broker = get_post_meta($id, 'legal_broker', true);
 $retargeting = get_post_meta($id, 'retargeting', true);
 $conversion = get_post_meta($id, 'conversion', true);
 $valuator_link = get_post_meta($id, 'home_valuator', true);
+$closing_costs = get_post_meta($id, 'closing', true);
 $phone = of_get_option('phone_number');
 $token = 'pf_seller_quiz';
 $media = '<img src="' . get_post_meta($id, 'media_file', true) . '" class="img-responsive" style="margin-top:10px">';
@@ -26,6 +27,8 @@ if (get_post_meta($id, 'area', true) == 'state') {
     $area = get_option('platform_user_state', 'our state');
 } elseif (get_post_meta($id, 'area', true) == 'city') {
     $area = get_option('platform_user_city', 'our city');
+} elseif (get_post_meta($id, 'area', true) == 'custom') {
+    $area = get_post_meta($id, 'area_custom', true);
 } else {
     $area = get_option('platform_user_county', 'Our') . ' County';
 }
@@ -317,23 +320,43 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
                 </div>
             </div>
 
-            <div class="row page" style="display:none;">
-                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="question-10" data-model="questionTen">
-                    <p class="question-number">10.</p>
-                    <h4 class="question-title">Are you willing to share closing costs with the potential buyer?</h4>
+            <?php if ($closing_costs == 'no') { ?>
+                <div class="row page" style="display:none;">
+                    <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="question-10" data-model="questionTen">
+                        <p class="question-number">10.</p>
+                        <h4 class="question-title">Does your home's exterior showcase good "curb appeal?"</h4>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <input name="question_ten" type="radio" value="a-8">
-                            <label><i class="fa fa-fw"></i> Yes</label>
-                        </div>
-                        <div class="col-xs-12">
-                            <input name="question_ten" type="radio" value="b-6">
-                            <label><i class="fa fa-fw"></i> No</label>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <input name="question_ten" type="radio" value="a-8">
+                                <label><i class="fa fa-fw"></i> Yes, I take good care of my lawn, landscaping, etc.</label>
+                            </div>
+                            <div class="col-xs-12">
+                                <input name="question_ten" type="radio" value="b-6">
+                                <label><i class="fa fa-fw"></i> It's not bad, but it could use some work.</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <?php } else { ?>
+                <div class="row page" style="display:none;">
+                    <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="question-10" data-model="questionTen">
+                        <p class="question-number">10.</p>
+                        <h4 class="question-title">Are you willing to share closing costs with the potential buyer?</h4>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <input name="question_ten" type="radio" value="a-8">
+                                <label><i class="fa fa-fw"></i> Yes</label>
+                            </div>
+                            <div class="col-xs-12">
+                                <input name="question_ten" type="radio" value="b-6">
+                                <label><i class="fa fa-fw"></i> No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
 
             <div class="row page" style="display:none;">
                 <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="question-11" data-model="questionEleven">
@@ -413,6 +436,7 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
                         <input name="permalink" type="hidden" value="<?= $permalink; ?>">
                         <input name="action" type="hidden" id="<?= $token ?>_submit_quiz" value="<?= $token ?>_submit_quiz">
                         <?php wp_nonce_field($token . '_submit_quiz', $token . '_nonce'); ?>
+                        <input name="quiz_id" type="hidden" value="<?= $id ?>">
 
                         <input type="submit" class="btn btn-primary btn-lg" id="submit-results" value="Get My Results!">
                     </div>
@@ -422,15 +446,15 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
     </form>
 
     <?php
-    if ($valuator_link != null) {
+    if ($valuator_link != '') {
         echo '<input type="hidden" id="valuator-link" value="' . $valuator_link . '">';
     }
 
-    if ($retargeting != null) {
+    if ($retargeting != '') {
         echo '<input type="hidden" id="retargeting" value="' . $retargeting . '">';
     }
 
-    if ($conversion != null) {
+    if ($conversion != '') {
         echo '<input type="hidden" id="conversion" value="' . $conversion . '">';
     }
     ?>
