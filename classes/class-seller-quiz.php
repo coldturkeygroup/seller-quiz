@@ -322,7 +322,7 @@ class SellerQuiz
                     $html .= '</select>';
                     if ($k == 'area') {
                         $area_custom_val = '';
-                        if(isset($fields['area_custom'])) {
+                        if (isset($fields['area_custom'])) {
                             $area_custom_val = 'value="' . esc_attr($fields['area_custom'][0]) . '"';
                         }
                         $html .= '<input type="text" name="area_custom" id="area_custom" ' . $area_custom_val . ' placeholder="Your Custom Area" style="width:100%;display:none;">';
@@ -448,6 +448,10 @@ class SellerQuiz
             ]);
             wp_enqueue_script('icheck');
             wp_enqueue_script($this->token . '-js');
+            wp_register_script('mailcheck', esc_url($this->assets_url . 'js/mailcheck.min.js'), [
+                'jquery'
+            ], SELLER_QUIZ_PLUGIN_VERSION);
+            wp_enqueue_script('mailcheck');
 
             $localize = [
                 'ajaxurl' => admin_url('admin-ajax.php')
