@@ -18,6 +18,7 @@ $retargeting = get_post_meta($id, 'retargeting', true);
 $conversion = get_post_meta($id, 'conversion', true);
 $valuator_link = get_post_meta($id, 'home_valuator', true);
 $closing_costs = get_post_meta($id, 'closing', true);
+$show_fields = get_post_meta($id, 'show_fields', true);
 $phone = of_get_option('phone_number');
 $token = 'pf_seller_quiz';
 $media = '<img src="' . get_post_meta($id, 'media_file', true) . '" class="img-responsive" style="margin-top:10px">';
@@ -456,6 +457,10 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
 
     if ($conversion != '') {
         echo '<input type="hidden" id="conversion" value="' . $conversion . '">';
+    }
+
+    if (isset($show_fields) && $show_fields == 'no') {
+        echo '<input type="hidden" id="showFields" value="no">';
     }
     ?>
 </div>

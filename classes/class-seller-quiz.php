@@ -480,6 +480,16 @@ class SellerQuiz
             'section' => 'info'
         ];
 
+        $fields['show_fields'] = [
+            'name' => __('Show Opt-In Fields', $this->token),
+            'description' => __('If set to no, opt-in fields will not be shown, and users will be shown their score and prompted to fill out the Home Valuator.', $this->token),
+            'placeholder' => '',
+            'type' => 'select',
+            'default' => 'yes',
+            'options' => ['no', 'yes'],
+            'section' => 'info'
+        ];
+
         $fields['area'] = [
             'name' => __('Quiz Area', $this->token),
             'description' => __('Question 4 requires you to define your area. Select to display your county or city.', $this->token),
@@ -819,6 +829,11 @@ class SellerQuiz
             $email = sanitize_text_field($_POST['email']);
             $source = sanitize_text_field($_POST['permalink']);
             $score = $this->score_quiz($_POST);
+
+            if (!isset($_POST['first_name']) || $_POST['first_name'] == '') {
+                echo json_encode(['user_id' => $user_id, 'score' => $score['score'], 'feedback' => $score['feedback']]);
+                die();
+            }
 
             $wpdb->query($wpdb->prepare(
                 'INSERT INTO ' . $this->table_name . '
