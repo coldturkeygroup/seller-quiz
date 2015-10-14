@@ -529,6 +529,15 @@ class SellerQuiz
             'section' => 'info'
         ];
 
+        $field['email'] = [
+            'name' => __('Notification Email', $this->token),
+            'description' => __('This address will be emailed when a user opts-into your ad. If left empty, emails will be sent to the default address for your site.', $this->token),
+            'placeholder' => '',
+            'type' => 'text',
+            'default' => '',
+            'section' => 'info'
+        ];
+
         $fields['retargeting'] = [
             'name' => __('Retargeting (optional)', $this->token),
             'description' => __('Facebook retargeting pixel to allow retargeting of people that view this page. (optional).', $this->token),
@@ -797,9 +806,13 @@ class SellerQuiz
         global $wpdb;
         $subscriber = $wpdb->get_row('SELECT * FROM ' . $this->table_name . ' WHERE id = \'' . $user_id . '\' ORDER BY id DESC LIMIT 0,1');
         $responses = $this->formatResponsesForEmail($quiz_id, explode(',', $subscriber->responses));
+        $email = get_bloginfo('admin_email');
+
+        if (get_post_meta($quiz_id, 'email', true) != null && filter_var(get_post_meta($quiz_id, 'email', true), FILTER_VALIDATE_EMAIL)) {
+            $email = get_post_meta($quiz_id, 'email', true);
+        }
 
         // Format the email and send it
-        $admin_email = get_bloginfo('admin_email');
         $headers[] = 'From: Platform <info@platform.marketing>';
         $headers[] = 'Reply-To: ' . $subscriber->email;
         $headers[] = 'Content-Type: text/html; charset=UTF-8';
@@ -810,7 +823,7 @@ class SellerQuiz
         $message = ob_get_contents();
         ob_end_clean();
 
-        wp_mail($admin_email, $subject, $message, $headers);
+        wp_mail($email, $subject, $message, $headers);
     }
 
     /**
@@ -825,6 +838,7 @@ class SellerQuiz
         if (isset($_POST[$this->token . '_nonce']) && wp_verify_nonce($_POST[$this->token . '_nonce'], $this->token . '_submit_quiz')) {
             global $wpdb;
             $blog_id = get_current_blog_id();
+            $quiz_id = sanitize_text_field($_POST['quiz_id']);
             $first_name = sanitize_text_field($_POST['first_name']);
             $email = sanitize_text_field($_POST['email']);
             $source = sanitize_text_field($_POST['permalink']);
@@ -870,7 +884,7 @@ class SellerQuiz
 
             // Create a note for the FrontDesk prospect
             if ($frontdesk_id != null) {
-                $responses = $this->formatResponsesForEmail($_POST['quiz_id'], $score['responses']);
+                $responses = $this->formatResponsesForEmail($quiz_id, $score['responses']);
                 $content = '<p><strong>Quiz Score:</strong> ' . $score['score'] . '/88</p>';
                 foreach ($responses as $response) {
                     $content .= '<p><strong>' . $response['question'] . '</strong><br> ' . $response['answer'] . '</p>';
@@ -879,7 +893,7 @@ class SellerQuiz
             }
 
             // Email the blog owner the details for the new prospect
-            $this->emailResultsToAdmin($user_id, $score['score'], $_POST['quiz_id']);
+            $this->emailResultsToAdmin($user_id, $score['score'], $quiz_id);
 
             echo json_encode(['user_id' => $user_id, 'score' => $score['score'], 'feedback' => $score['feedback']]);
             die();
