@@ -627,11 +627,7 @@ class SellerQuiz
         if (get_post_type($post_ID) != $this->token)
             return false;
 
-        if (($_POST['post_status'] != 'publish') || ($_POST['original_post_status'] == 'publish'))
-            return false;
-
         global $wpdb;
-        $title = get_the_title($post_ID);
         $permalink = get_permalink($post_ID);
 
         // See if we're using domain mapping
@@ -647,7 +643,17 @@ class SellerQuiz
                 $permalink = str_replace($domain, 'http://' . $mapped, $permalink);
         }
 
-        $this->frontdesk->createCampaign($title, $permalink);
+        if (($_POST['post_status'] != 'publish') || ($_POST['original_post_status'] == 'publish')) {
+            $campaign_id = get_post_meta($post_ID, 'frontdesk_campaign', true);
+            if ($campaign_id != '' && is_int($campaign_id)) {
+                $this->frontdesk->updateCampaign($campaign_id, get_the_title($post_ID), $permalink);
+            }
+            return true;
+        }
+        $campaign_id = $this->frontdesk->createCampaign(get_the_title($post_ID), $permalink);
+        if (is_int($campaign_id)) {
+            update_post_meta($post_ID, 'frontdesk_campaign', $campaign_id);
+        }
     }
 
     /**
@@ -842,9 +848,9 @@ class SellerQuiz
             global $wpdb;
             $blog_id = get_current_blog_id();
             $quiz_id = sanitize_text_field($_POST['quiz_id']);
+            $frontdesk_campaign = sanitize_text_field($_POST['frontdesk_campaign']);
             $first_name = sanitize_text_field($_POST['first_name']);
             $email = sanitize_text_field($_POST['email']);
-            $source = sanitize_text_field($_POST['permalink']);
             $score = $this->score_quiz($_POST);
 
             if (!isset($_POST['first_name']) || $_POST['first_name'] == '') {
@@ -869,7 +875,7 @@ class SellerQuiz
 
             // Create the prospect on FrontDesk
             $frontdesk_id = $this->frontdesk->createProspect([
-                'source' => $source,
+                'campaign_id' => $frontdesk_campaign,
                 'first_name' => $first_name,
                 'email' => $email
             ]);

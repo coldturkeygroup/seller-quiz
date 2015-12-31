@@ -12,7 +12,7 @@ global $pf_seller_quiz, $wp_query;
 
 $id = get_the_ID();
 $title = get_the_title();
-$permalink = get_permalink();
+$frontdesk_campaign = get_post_meta( $id, 'frontdesk_campaign', true );
 $broker = get_post_meta($id, 'legal_broker', true);
 $retargeting = get_post_meta($id, 'retargeting', true);
 $conversion = get_post_meta($id, 'conversion', true);
@@ -434,7 +434,7 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
                             <input type="text" name="email" id="email" class="form-control" required="required" placeholder="Email Address">
                         </div>
 
-                        <input name="permalink" type="hidden" value="<?= $permalink; ?>">
+                        <input name="frontdesk_campaign" type="hidden" value="<?= $frontdesk_campaign ?>">
                         <input name="action" type="hidden" id="<?= $token ?>_submit_quiz" value="<?= $token ?>_submit_quiz">
                         <?php wp_nonce_field($token . '_submit_quiz', $token . '_nonce'); ?>
                         <input name="quiz_id" type="hidden" value="<?= $id ?>">
