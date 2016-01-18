@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Seller Quiz Submission</title>
+    <title>New <?= $title ?> Submission</title>
     <style type="text/css">
         #outlook a {
             padding: 0;
@@ -334,7 +334,7 @@
 
 <body style="background-color:#FFFFFF;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;margin:0;padding:0;height:100% ;width:100% ;">
 
-<span class="preheader" style="color:transparent;display:none ;visibility:hidden;opacity:0;height:0;width:0;">You have a new Seller Quiz submission - here is their info:</span>
+<span class="preheader" style="color:transparent;display:none ;visibility:hidden;opacity:0;height:0;width:0;">You have a new <?= $title ?> submission - here is their info:</span>
 
 <center>
     <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="background-color:#FFFFFF;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;mso-table-lspace:0pt;mso-table-rspace:0pt;margin:0;padding:0;border-collapse:collapse ;height:100% ;width:100% ;">
@@ -358,7 +358,7 @@
                                 <tr>
                                     <td align="center" valign="top" style="padding-top: 0;padding-bottom: 0;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                                         <h2 style="text-align:center;font-family:'Helvetica Neue',Helvetica, Arial, sans-serif;font-size:26px;font-weight:bold;line-height:138%;margin:0;padding:0;-webkit-font-smoothing:antialiased;color:#3A3A3A ;text-decoration:none ;">
-                                            New Seller Quiz Submission
+                                            New <?= $title ?> Submission
                                         </h2>
                                     </td>
                                 </tr>

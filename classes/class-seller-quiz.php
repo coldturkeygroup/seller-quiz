@@ -471,6 +471,33 @@ class SellerQuiz
     {
         $fields = [];
 
+        $fields['quiz_title'] = [
+            'name' => __('Quiz Title', $this->token),
+            'description' => __('The title that will be displayed for your quiz.', $this->token),
+            'placeholder' => 'Should you sell your home?',
+            'type' => 'text',
+            'default' => 'Should you sell your home?',
+            'section' => 'info'
+        ];
+
+        $fields['quiz_subtitle'] = [
+            'name' => __('Quiz Subtitle', $this->token),
+            'description' => __('The subtitle displayed under the title for your quiz.', $this->token),
+            'placeholder' => 'Find out if it\'s the right time to list your home for sale.',
+            'type' => 'text',
+            'default' => 'Find out if it\'s the right time to list your home for sale.',
+            'section' => 'info'
+        ];
+
+        $fields['quiz_start_button'] = [
+            'name' => __('Quiz Start Button', $this->token),
+            'description' => __('The text displayed on the button to start your quiz.', $this->token),
+            'placeholder' => 'Take The Quiz',
+            'type' => 'text',
+            'default' => 'Take The Quiz',
+            'section' => 'info'
+        ];
+
         $fields['home_valuator'] = [
             'name' => __('Link To Home Valuator', $this->token),
             'description' => __('The last step of the funnel allows you to link the user to your Home Valuator. Enter the link for the funnel here.', $this->token),
@@ -511,12 +538,12 @@ class SellerQuiz
         ];
 
         $fields['closing'] = [
-            'name' => __('Do You Split Closing Costs?', $this->token),
+            'name' => __('Show Split Closing Costs Question?', $this->token),
             'description' => __('One quiz question assumes that you split closing costs with your buyer. ', $this->token),
             'placeholder' => '',
             'type' => 'select',
             'default' => '',
-            'options' => ['yes', 'no'],
+            'options' => ['no', 'yes'],
             'section' => 'info'
         ];
 
@@ -680,7 +707,7 @@ class SellerQuiz
                 74
             ],
             [
-                '<em>Congrats! Since you scored over 75 out of a possible 88</em>, you will be able to sell your house quickly and for top dollar.',
+                '<em>Congrats! Since you scored over 75 out of a possible 88</em>, you should be able to sell your house quickly and for top dollar.',
                 75,
                 88
             ]
@@ -729,7 +756,7 @@ class SellerQuiz
             'How long have you owned your home?',
             'Do you need your home to sell in less than 90 days, or are you willing to wait for a potential buyer that might be willing to pay more money?',
             'Is your home newly renovated/updated, or does it currently need minor upgrades?',
-            'Here in ' . get_option('platform_user_county', 'Kandiyohi') . ' County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?',
+            'Here in ' . get_option('platform_user_county', 'our') . ' County, certain price ranges sell a lot faster than other price ranges. What do you think your home is worth right now?',
             'What is the approximate age of your home?',
             'What is the condition of your roof/shingles?',
             'Does home equity play a major role in your retirement savings/strategy?',
@@ -756,16 +783,16 @@ class SellerQuiz
                 'd' => 'My house is completely updated with brand new appliances, brand new interior (flooring, walls, etc.)'
             ],
             [
-                'a' => 'Less than $150,000',
-                'b' => '$150,000-$300,000',
-                'c' => '$300,000-$600,000',
-                'd' => '$600,000+'
+                'a' => 'Less than $250,000',
+                'b' => '$250,000-$500,000',
+                'c' => '$500,000-$750,000',
+                'd' => '$750,000+'
             ],
             [
                 'a' => 'It\'s less than 5 years old',
-                'b' => 'It\'s 5-20 years old',
-                'c' => '20-50 years old',
-                'd' => '50 years+'
+                'b' => 'It\'s 5-10 years old',
+                'c' => '10-20 years old',
+                'd' => '20 years+'
             ],
             [
                 'a' => 'It\'s brand new',
@@ -815,6 +842,7 @@ class SellerQuiz
         global $wpdb;
         $subscriber = $wpdb->get_row('SELECT * FROM ' . $this->table_name . ' WHERE id = \'' . $user_id . '\' ORDER BY id DESC LIMIT 0,1');
         $responses = $this->formatResponsesForEmail($quiz_id, explode(',', $subscriber->responses));
+        $title = get_the_title($quiz_id);
         $email = get_bloginfo('admin_email');
 
         if (get_post_meta($quiz_id, 'email', true) != null && filter_var(get_post_meta($quiz_id, 'email', true), FILTER_VALIDATE_EMAIL)) {
@@ -825,7 +853,7 @@ class SellerQuiz
         $headers[] = 'From: Platform <info@platform.marketing>';
         $headers[] = 'Reply-To: ' . $subscriber->email;
         $headers[] = 'Content-Type: text/html; charset=UTF-8';
-        $subject = 'New Seller Quiz Submission';
+        $subject = 'New ' . $title . ' Submission';
         // Load template into message
         ob_start();
         include $this->template_path . 'single-email.php';

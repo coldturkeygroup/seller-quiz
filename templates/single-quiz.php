@@ -12,7 +12,10 @@ global $pf_seller_quiz, $wp_query;
 
 $id = get_the_ID();
 $title = get_the_title();
-$frontdesk_campaign = get_post_meta( $id, 'frontdesk_campaign', true );
+$quiz_title = get_post_meta($id, 'quiz_title', true);
+$quiz_subtitle = get_post_meta($id, 'quiz_subtitle', true);
+$quiz_start_button = get_post_meta($id, 'quiz_start_button', true);
+$frontdesk_campaign = get_post_meta($id, 'frontdesk_campaign', true);
 $broker = get_post_meta($id, 'legal_broker', true);
 $retargeting = get_post_meta($id, 'retargeting', true);
 $conversion = get_post_meta($id, 'conversion', true);
@@ -32,6 +35,18 @@ if (get_post_meta($id, 'area', true) == 'state') {
     $area = get_post_meta($id, 'area_custom', true);
 } else {
     $area = get_option('platform_user_county', 'Our') . ' County';
+}
+
+if ($quiz_title == null || $quiz_title == '') {
+    $quiz_title = 'Should you sell your home?';
+}
+
+if ($quiz_subtitle == null || $quiz_subtitle == '') {
+    $quiz_subtitle = 'Find out if it\'s the right time to list your home for sale.';
+}
+
+if ($quiz_start_button == null || $quiz_start_button == '') {
+    $quiz_start_button = 'Take The Quiz';
 }
 
 // Get the page colors
@@ -102,11 +117,11 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
         <div class="container-fluid">
             <div class="row page animated fadeIn">
                 <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0 col-md-8 col-md-offset-2" id="landing" data-model="landing">
-                    <h3 style="text-align: center;" class="landing-title">Should you sell your home?</h3>
+                    <h3 style="text-align: center;" class="landing-title"><?= $quiz_title ?></h3>
 
-                    <h4 style="text-align: center;">Find out if it's the right time to list your home for sale.</h4>
+                    <h4 style="text-align: center;"><?= $quiz_subtitle ?></h4>
 
-                    <input class="btn btn-primary btn-lg" id="start-quiz" type="submit" value="Take The Quiz">
+                    <input class="btn btn-primary btn-lg" id="start-quiz" type="submit" value="<?= $quiz_start_button ?>">
                 </div>
             </div>
 
@@ -188,19 +203,19 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
                     <div class="row">
                         <div class="col-xs-12">
                             <input name="question_four" type="radio" value="a-4">
-                            <label><i class="fa fa-fw"></i> Less than $150,000</label>
+                            <label><i class="fa fa-fw"></i> Less than $250,000</label>
                         </div>
                         <div class="col-xs-12">
                             <input name="question_four" type="radio" value="b-8">
-                            <label><i class="fa fa-fw"></i> $150,000-$300,000</label>
+                            <label><i class="fa fa-fw"></i> $250,000-$500,000</label>
                         </div>
                         <div class="col-xs-12">
                             <input name="question_four" type="radio" value="c-8">
-                            <label><i class="fa fa-fw"></i> $300,000-$600,000</label>
+                            <label><i class="fa fa-fw"></i> $500,000-$750,000</label>
                         </div>
                         <div class="col-xs-12">
                             <input name="question_four" type="radio" value="d-4">
-                            <label><i class="fa fa-fw"></i> $600,000+</label>
+                            <label><i class="fa fa-fw"></i> $750,000+</label>
                         </div>
                     </div>
                 </div>
@@ -218,15 +233,15 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
                         </div>
                         <div class="col-xs-12">
                             <input name="question_five" type="radio" value="b-6">
-                            <label><i class="fa fa-fw"></i> It's 5-20 years old</label>
+                            <label><i class="fa fa-fw"></i> It's 5-10 years old</label>
                         </div>
                         <div class="col-xs-12">
                             <input name="question_five" type="radio" value="c-6">
-                            <label><i class="fa fa-fw"></i> 20-50 years old</label>
+                            <label><i class="fa fa-fw"></i> 10-20 years old</label>
                         </div>
                         <div class="col-xs-12">
                             <input name="question_five" type="radio" value="d-4">
-                            <label><i class="fa fa-fw"></i> 50 years+</label>
+                            <label><i class="fa fa-fw"></i> 20 years+</label>
                         </div>
                     </div>
                 </div>
@@ -455,17 +470,30 @@ if ($hover_setting && strlen($hover_setting) > 0 && $hover_setting != '') {
         ?>
         <!-- Facebook Pixel Code -->
         <script>
-        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-        document,'script','//connect.facebook.net/en_US/fbevents.js');
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq)return;
+                n = f.fbq = function () {
+                    n.callMethod ?
+                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq)f._fbq = n;
+                n.push = n;
+                n.loaded = !0;
+                n.version = '2.0';
+                n.queue = [];
+                t = b.createElement(e);
+                t.async = !0;
+                t.src = v;
+                s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window,
+                document, 'script', '//connect.facebook.net/en_US/fbevents.js');
 
-        fbq('init', '<?= $retargeting ?>');
-        fbq('track', "PageView");</script>
+            fbq('init', '<?= $retargeting ?>');
+            fbq('track', "PageView");</script>
         <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id=<?= $retargeting ?>&ev=PageView&noscript=1"
-        /></noscript>
+                       src="https://www.facebook.com/tr?id=<?= $retargeting ?>&ev=PageView&noscript=1"
+            /></noscript>
         <?php
         echo '<input type="hidden" id="retargeting" value="' . $retargeting . '">';
     }
