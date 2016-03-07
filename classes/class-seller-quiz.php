@@ -448,7 +448,7 @@ class SellerQuiz
             ]);
             wp_enqueue_script('icheck');
             wp_enqueue_script($this->token . '-js');
-            wp_register_script('mailgun-validator', esc_url($this->assets_url . 'js/mailgun-validator.min.js'), [
+            wp_register_script('mailgun-validator', esc_url($this->assets_url . 'js/mailgun-validator.js'), [
                 'jquery'
             ], SELLER_QUIZ_PLUGIN_VERSION);
             wp_enqueue_script('mailgun-validator');
