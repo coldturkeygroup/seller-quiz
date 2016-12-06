@@ -1,4 +1,6 @@
-<?php namespace ColdTurkey\SellerQuiz;
+<?php
+
+namespace ColdTurkey\SellerQuiz;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly.
 
