@@ -1,13 +1,13 @@
 <?php
 /*
  * Plugin Name: Seller Quiz
- * Version: 1.6.6
+ * Version: 1.6.7
  * Plugin URI: http://www.coldturkeygroup.com/
  * Description: Multiple choice quiz to help potential home owners decide whether or not they're ready to sell.
  * Author: Cold Turkey Group
  * Author URI: http://www.coldturkeygroup.com/
  * Requires at least: 4.0
- * Tested up to: 4.3
+ * Tested up to: 5.1
  *
  * @package Seller Quiz
  * @author Aaron Huisinga
@@ -23,7 +23,7 @@ if (!defined('SELLER_QUIZ_PLUGIN_PATH')) {
 }
 
 if (!defined('SELLER_QUIZ_PLUGIN_VERSION')) {
-    define('SELLER_QUIZ_PLUGIN_VERSION', '1.6.6');
+    define('SELLER_QUIZ_PLUGIN_VERSION', '1.6.7');
 }
 
 require_once('classes/class-seller-quiz.php');
