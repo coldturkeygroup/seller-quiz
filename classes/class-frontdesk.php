@@ -107,7 +107,7 @@ class FrontDesk
     {
         try {
             if ($this->api_key != null || $this->api_key != '') {
-                $response = $this->guzzle->post($this->api_base . 'subscribers/complete/', [
+                $response = $this->guzzle->post($this->api_base . 'subscribers', [
                     'form_params' => [
                         'campaigns'  => $data['campaign_id'],
                         'email'      => $data['email'],
